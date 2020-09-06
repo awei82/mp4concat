@@ -15,6 +15,7 @@ Large portions of this project were based on https://github.com/sverrirs/mp4comb
 ## Build and activate the virtual environment
 ```
 python -m venv .venv
+pip install -r requirements.txt
 source .venv/bin/activate
 ```
 
