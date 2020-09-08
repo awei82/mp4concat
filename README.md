@@ -10,7 +10,7 @@ The `ffmpeg` and `MP4Box` executables are located in the `bin` directory.
 
 Large portions of this project were based on https://github.com/sverrirs/mp4combine
 
-`SRTconcat.py` concatenates SRT subtitle files to aligned the input subtitle files with the final merged MP4 ouput.
+`SRTconcat.py` concatenates SRT subtitle files together and aligns the input subtitle files with the final merged MP4 ouput.
 
 ## Build and activate the virtual environment
 ```
@@ -30,3 +30,6 @@ python MP4concat.py -i input/*.mp4 -o output/merged_video.mp4
 python SRTconcat.py -i input/*.srt -o output/merged_video.srt
 ```
 
+### Notes
+- If you have trouble viewing the chapter information in your concatenated video, try using another video player such as [VLC](https://www.videolan.org/vlc/index.html).  
+- This script is intended to be used with video files w/ identical video resolutions. If you need to merge files with different resolutions, try https://github.com/sverrirs/mp4combine
