@@ -299,7 +299,7 @@ def parseArguments():
     parser.add_argument("--overwrite", action="store_true",
                         help="Existing files with the same name as the output will be silently overwritten.")
     parser.add_argument("--nosort", action="store_true",
-                        help="Maintain ordering of files at inputted (no natural sorting of input files before concatenation).") 
+                        help="Maintain ordering of files as inputted (no natural sorting of input files before concatenation).") 
     args = parser.parse_args()
 
 
