@@ -67,7 +67,7 @@ def write_subtitles_to_file(subtitles, output_file):
             fp.write('\n')
             
 
-def get_alignment_start_times(mp4_file, mp4Box_exe = '../bin/MP4Box'):
+def get_alignment_start_times(mp4_file, mp4Box_exe = 'bin/MP4Box'):
     '''
     Captures chapter timestamps from mp4 file
     to be used for aligning subtitle times
@@ -133,7 +133,7 @@ def main():
     # use mp4 chapter offsets to align subtitles
     if args.mp4:
         start_times = get_alignment_start_times(args.mp4)
-        if len(start_times) < len(args.input):
+        if len(start_times) < len(srt_files):
             raise Exception('Error: # of chapters in MP4 file does not match # of input srt files. Exiting')
             exit(-1)
     else:
