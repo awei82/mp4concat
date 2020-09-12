@@ -21,6 +21,8 @@ from datetime import timedelta # To store the parsed duration of files and calcu
 from random import shuffle # To be able to shuffle the list of files if the user requests it
 import csv # To use for the cutpoint files they are CSV files
 from termcolor import colored # For shorthand color printing to the console, https://pypi.python.org/pypi/termcolor
+from functools import reduce
+import operator
 
 
 class Colors(object):
@@ -174,18 +176,21 @@ def parseMp4boxMediaInfo(file_name, mp4box_path, regex_mp4box_duration):
     return {'file':file_name, 'size':file_size, 'dur':duration }
 
 
-# use ffmpeg to combine the video files
 def combineVideoFiles(ffmpegexec, video_files, output_file):
-    # create file list for ffmpeg
-    filenames_file = createFilenamesFile(video_files)
+    # https://trac.ffmpeg.org/wiki/Concatenate#protocol
+    intermediate_files = [str(v) + '.ts' for v in range(len(video_files))]
 
-    # concat_string = '"concat:{}"'.format('|'.join(video_files))
-    prog_args = [ffmpegexec, '-hide_banner', '-f', 'concat', '-safe', '0', '-i', filenames_file, '-c', 'copy', str(output_file), '-y']
+    for video_file, intermediate_file in zip(video_files, intermediate_files):
+        prog_args = [ffmpegexec, '-hide_banner', '-i', video_file, '-c', 'copy', '-bsf:v', 'h264_mp4toannexb', '-f', 'mpegts', intermediate_file, '-y']
+        _runSubProcess(prog_args)
+    
+    concat_string = 'concat:' + '|'.join(intermediate_files) 
+    prog_args = [ffmpegexec, '-hide_banner', '-i', concat_string, '-c', 'copy', '-bsf:a', 'aac_adtstoasc', str(output_file), '-y']
     _runSubProcess(prog_args, path_to_wait_on=output_file)
 
-    # Delete the file list
-    if os.path.exists(str(filenames_file)):
-        os.remove(str(filenames_file))
+    for intermediate_file in intermediate_files:
+        os.remove(intermediate_file)
+
 
 def createFilenamesFile(input_files):
     filenames_file = 'filenames.txt'
