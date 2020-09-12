@@ -28,17 +28,37 @@ class Subtitle_Line(NamedTuple):
 
 def srt_file_to_subtitles(srt_file):
     with open(srt_file, 'r') as fp:
-        srt = fp.read()
+        srt_lines = fp.readlines()
 
-    srt_split = srt.split('\n')
+    start_times = []
+    end_times = []
+    text_lines = []
 
-    start_times = [x.split()[0] for x in srt_split[1::4]]
+    ptr = 0
+    while ptr < len(srt_lines):
+        # skip the counter line
+        ptr += 1
+        # grab the start/end times
+        start_times.append(srt_lines[ptr].split()[0])
+        end_times.append(srt_lines[ptr].split()[2])
+        ptr += 1
+        # grab the text
+        text = srt_lines[ptr]
+        ptr += 1
+        while ptr < len(srt_lines) and srt_lines[ptr].strip() != '':
+            text += '\n' + srt_lines[ptr]
+            ptr += 1
+        text_lines.append(text)
+        while ptr < len(srt_lines) and srt_lines[ptr].strip() == '':
+            ptr += 1
+
+    # start_times = [x.split()[0] for x in srt_lines[1::4]]
     start_times = [datetime.strptime(x, '%H:%M:%S,%f') for x in start_times]
 
-    end_times = [x.split()[2] for x in srt_split[1::4]]
+    # end_times = [x.split()[2] for x in srt_lines[1::4]]
     end_times = [datetime.strptime(x, '%H:%M:%S,%f') for x in end_times]
 
-    text_lines = srt_split[2::4]
+    # text_lines = srt_lines[2::4]
 
     subtitles = [Subtitle_Line(*x) for x in zip(start_times, end_times, text_lines)]
     return subtitles
@@ -125,9 +145,6 @@ def main():
 
 
     srt_files = input_files
-    print('srt files:')
-    for srt_file in srt_files:
-        print(f' - {srt_file}')
 
 
     # use mp4 chapter offsets to align subtitles
@@ -140,8 +157,10 @@ def main():
         start_times = [None]
 
 
+    print('processing srt files:')
     merged_subtitles = []
     for i, srt_file in enumerate(srt_files):
+        print(f' - {srt_file}')
         subtitles = srt_file_to_subtitles(srt_file)
         subtitles = align_subtitle_times(subtitles, start_times[i])
 
