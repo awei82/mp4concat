@@ -6,7 +6,9 @@ The script calls the `ffmpeg` and `MP4Box` executables under the hood to do the 
 - https://ffmpeg.org/  
 - https://github.com/gpac/gpac/wiki/MP4Box-Introduction   
 
-The `ffmpeg` and `MP4Box` executables are located in the `bin` directory.
+The `ffmpeg` and `MP4Box` executables are located in the `bin/` directory.
+
+Note - `ffmpeg` will need to generate intermediate files as part of its concatenation process. The python script will need to be able to write temporary files to its current working directory.
 
 Large portions of this project were based on https://github.com/sverrirs/mp4combine
 
