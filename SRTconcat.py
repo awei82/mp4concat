@@ -46,7 +46,7 @@ def srt_file_to_subtitles(srt_file):
         text = srt_lines[ptr]
         ptr += 1
         while ptr < len(srt_lines) and srt_lines[ptr].strip() != '':
-            text += '\n' + srt_lines[ptr]
+            text += srt_lines[ptr]
             ptr += 1
         text_lines.append(text)
         while ptr < len(srt_lines) and srt_lines[ptr].strip() == '':
