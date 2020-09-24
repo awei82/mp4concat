@@ -29,7 +29,7 @@ python MP4concat.py -i input/*.mp4 -o output/merged_video.mp4
 
 ## SRTconcat usage
 ```
-python SRTconcat.py -i input/*.srt -o output/merged_video.srt
+python SRTconcat.py -i input/*.srt -o output/merged_video.srt --mp4 output/merged_video.mp4
 ```
 
 ### Notes
