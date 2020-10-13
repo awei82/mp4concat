@@ -27,7 +27,7 @@ class Subtitle_Line(NamedTuple):
 
 
 def srt_file_to_subtitles(srt_file):
-    with open(srt_file, 'r') as fp:
+    with open(srt_file, 'r', errors='ignore') as fp:
         srt_lines = fp.readlines()
 
     start_times = []
