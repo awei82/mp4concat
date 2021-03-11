@@ -133,26 +133,28 @@ def parse_arguments():
 
 def main():
     args = parse_arguments()
+    input_files = []
 
     # get list of input files
     if args.input:
         input_files = args.input
     elif args.input_dir:
         input_files = [args.input_dir + '/' + filename for filename in os.listdir(args.input_dir)]
+        input_files = [x for x in input_files if x[-4:] == '.srt']
+
+    if len(input_files) == 0:
+        raise Exception('No .srt files found. Exiting')
 
     if not args.nosort:
         input_files = sorted(input_files, key=natural_key)
 
-
     srt_files = input_files
-
 
     # use mp4 chapter offsets to align subtitles
     if args.mp4:
         start_times = get_alignment_start_times(args.mp4)
         if len(start_times) < len(srt_files):
             raise Exception('Error: # of chapters in MP4 file does not match # of input srt files. Exiting')
-            exit(-1)
     else:
         start_times = [None]
 
@@ -178,4 +180,3 @@ def main():
     
 if __name__ == '__main__':
     main()
-    

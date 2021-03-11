@@ -62,30 +62,35 @@ def main():
 
     # Get the mp4box exec
     mp4exec = args.mp4box
-    if mp4exec == None:
+    if mp4exec is None:
         mp4exec = 'bin/MP4Box.exe' if os.name == 'nt' else 'bin/MP4Box'
 
     # Get ffmpeg exec
     ffmpegexec = args.ffmpeg
-    if ffmpegexec == None:
+    if ffmpegexec is None:
         ffmpegexec = 'bin/ffmpeg.exe' if os.name == 'nt' else 'bin/ffmpeg'
 
     # Create the output file names both for the video file and the intermediate chapters file
     output_file = Path(args.output)  
 
     # If the output files exist then either error or overwrite
-    if( output_file.exists() ):
-        if( args.overwrite ):
+    if output_file.exists():
+        if args.overwrite:
             os.remove(str(output_file))
         else:
-            print( "Output file '{0}' already exists. Use --overwrite switch to overwrite.".format(Colors.filename(output_file.name)))
+            print("Output file '{0}' already exists. Use --overwrite switch to overwrite.".format(Colors.filename(output_file.name)))
             sys.exit(0)
 
     # get list of input files
+    input_files = []
     if args.input:
         input_files = args.input
     elif args.input_dir:
         input_files = [args.input_dir + '/' + filename for filename in os.listdir(args.input_dir)]
+        input_files = [x for x in input_files if x[-4:] == '.mp4']
+
+    if len(input_files) == 0:
+        raise Exception('No .mp4 files found. Exiting')
 
     if not args.nosort:
         input_files = sorted(input_files, key=natural_key)
@@ -95,9 +100,8 @@ def main():
     for in_file in input_files:
         print("File: {0}".format(Colors.filename(in_file)))
         mp4_fileinfo = parseMp4boxMediaInfo(in_file, mp4exec, regex_mp4box_duration)
-        if mp4_fileinfo == None:
+        if mp4_fileinfo is None:
             raise Exception(f"Invalid input file: {in_file}. Exiting.")
-            sys.exit(-1)
         else:
             file_infos.append(mp4_fileinfo)
 
@@ -264,7 +268,7 @@ def _runSubProcess(prog_args, path_to_wait_on=None):
         ret.terminate()
         raise
 
-    if( retcode != 0 ): 
+    if retcode != 0:
         print( "Error while executing {0}".format(prog_args[0]))
         print(" Full arguments:")
         print( " ".join(prog_args))
@@ -307,8 +311,7 @@ def parseArguments():
                         help="Maintain ordering of files as inputted (no natural sorting of input files before concatenation).") 
     args = parser.parse_args()
 
-
-    if (args.input and args.input_dir):
+    if args.input and args.input_dir:
         print("Only one of --input or --input_dir may be entered as an argument. Exiting.")
         sys.exit(0)
 
