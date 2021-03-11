@@ -13,16 +13,10 @@ import humanize # Display human readible values for sizes etc
 import sys, os, time
 from pathlib import Path # to check for file existence in the file system
 import argparse # Command-line argument parser
-import ntpath # Used to extract file name from path for all platforms http://stackoverflow.com/a/8384788
-import glob # Used to do partial file path matching when listing file directories in search of files to concatinate http://stackoverflow.com/a/2225582/779521
 import subprocess # To execute shell commands 
 import re # To perform substring matching on the output of mp4box and other subprocesses
 from datetime import timedelta # To store the parsed duration of files and calculate the accumulated duration
-from random import shuffle # To be able to shuffle the list of files if the user requests it
-import csv # To use for the cutpoint files they are CSV files
 from termcolor import colored # For shorthand color printing to the console, https://pypi.python.org/pypi/termcolor
-from functools import reduce
-import operator
 
 
 class Colors(object):
@@ -52,7 +46,7 @@ def formatTimedelta(time_delta):
 
 
 def main():
-    colorama.init() # Initialize the colorama library
+    colorama.init()
 
     # Compile the regular expressions
     regex_mp4box_duration = re.compile(r"Computed Duration (?P<hrs>[0-9]{2}):(?P<min>[0-9]{2}):(?P<sec>[0-9]{2}).(?P<msec>[0-9]{3})", re.MULTILINE)
@@ -107,7 +101,7 @@ def main():
 
 
     # If nothing was found then don't continue, this can happen if no mp4 files are found or if only the joined file is found
-    if( len(file_infos) <= 0 ):
+    if len(file_infos) <= 0:
         print( "No mp4 video files found matching '{0}' Exiting.".format(args.match))
         sys.exit(0)
 
@@ -147,7 +141,7 @@ def main():
     size_out_file_kb = os.path.getsize(str(output_file)) / 1024
     print( Colors.toolpath("Final size of video file is: {0}".format(humanize.naturalsize(size_out_file_kb * 1024))))
 
-    colorama.deinit() #Deinitialize the colorama library
+    colorama.deinit()
 
 
 # Executes the mp4box app with the -info switch and 

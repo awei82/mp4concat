@@ -65,9 +65,9 @@ def srt_file_to_subtitles(srt_file):
 
 
 def align_subtitle_times(subtitles, start_time = None):
-    '''
+    """
     Aligns subtitle timestamps to a start time.
-    '''
+    """
     zero = datetime.strptime("00:00", "%H:%M")
     if start_time:
         new_start_times = [start_time + (line.start - zero) for line in subtitles]
@@ -88,10 +88,10 @@ def write_subtitles_to_file(subtitles, output_file):
             
 
 def get_alignment_start_times(mp4_file, mp4Box_exe = 'bin/MP4Box'):
-    '''
+    """
     Captures chapter timestamps from mp4 file
     to be used for aligning subtitle times
-    '''
+    """
     result = subprocess.run([mp4Box_exe, '-dump-chap-ogg', mp4_file, '-out', '/dev/stdout'], 
                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     result_str = result.stdout.decode('utf-8')
@@ -120,7 +120,7 @@ def parse_arguments():
                         help="Maintain ordering of files at inputted (no natural sorting of input files before concatenation).")
     args = parser.parse_args()
 
-    if (args.input and args.input_dir):
+    if args.input and args.input_dir:
         print("Only one of --input or --input_dir may be entered as an argument. Exiting.")
         exit()
 
