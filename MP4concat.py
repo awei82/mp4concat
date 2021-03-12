@@ -102,7 +102,7 @@ def main():
 
     # If nothing was found then don't continue, this can happen if no mp4 files are found or if only the joined file is found
     if len(file_infos) <= 0:
-        print( "No mp4 video files found matching '{0}' Exiting.".format(args.match))
+        print("No mp4 video files found matching '{0}' Exiting.".format(args.match))
         sys.exit(0)
 
     print("Found {0} files".format(len(file_infos)))
@@ -123,11 +123,11 @@ def main():
         cumulative_size += file_info['size'] 
 
     # Add the final chapter as the end for this segment
-    chapters.append({"name": "End", "timecode":formatTimedelta(cumulative_dur)})
+    chapters.append({"name": "End", "timecode": formatTimedelta(cumulative_dur)})
 
     # Chapters should be +1 more than files as we have an extra chapter ending at the very end of the file
-    print("{0} chapters, {1} running time, {2} total size".format( len(chapters), formatTimedelta(cumulative_dur), humanize.naturalsize(cumulative_size, gnu=True)))
-    print( "Output: {0}".format(Colors.fileout(str(output_file))))
+    print("{0} chapters, {1} running time, {2} total size".format(len(chapters), formatTimedelta(cumulative_dur), humanize.naturalsize(cumulative_size, gnu=True)))
+    print("Output: {0}".format(Colors.fileout(str(output_file))))
 
     # combine video files first
     print(Colors.toolpath("Combining the video files (ffmpeg)"))
@@ -139,7 +139,7 @@ def main():
 
     # Read the created file to learn its final filesize
     size_out_file_kb = os.path.getsize(str(output_file)) / 1024
-    print( Colors.toolpath("Final size of video file is: {0}".format(humanize.naturalsize(size_out_file_kb * 1024))))
+    print(Colors.toolpath("Final size of video file is: {0}".format(humanize.naturalsize(size_out_file_kb * 1024))))
 
     colorama.deinit()
 
@@ -228,7 +228,7 @@ def createChaptersFile(chapters):
 # log line to the console on a single line
 def _runSubProcess(prog_args, path_to_wait_on=None):
 
-    print( " ".join(prog_args))
+    print(" ".join(prog_args))
 
     # Force a UTF8 environment for the subprocess so that files with non-ascii characters are read correctly
     # for this to work we must not use the universal line endings parameter
@@ -265,14 +265,14 @@ def _runSubProcess(prog_args, path_to_wait_on=None):
     if retcode != 0:
         print( "Error while executing {0}".format(prog_args[0]))
         print(" Full arguments:")
-        print( " ".join(prog_args))
-        print( "Full error")
+        print(" ".join(prog_args))
+        print("Full error")
         print("\n".join(trace_lines))
         raise ValueError("Error {1} while executing {0}".format(prog_args[0], retcode))
 
     # If we should wait on the creation of a particular file then do that now
     total_wait_sec = 0
-    if not path_to_wait_on is None and not path_to_wait_on.is_dir():
+    if path_to_wait_on is not None and not path_to_wait_on.is_dir():
         while not path_to_wait_on.exists() or total_wait_sec < 5:
             time.sleep(1)
             total_wait_sec += 1
@@ -291,7 +291,7 @@ def parseArguments():
     
     parser.add_argument("-o", "--output", type=str,
                         help="The path and filename of the concatenated output file. If multiple files then the script will append a number to the filename.")
-    parser.add_argument("-i","--input", type=str,  nargs='+',
+    parser.add_argument("-i", "--input", type=str,  nargs='+',
                         help="List of mp4 files to concatenate.")
     parser.add_argument("-d", "--input_dir", type=str,
                         help="As an alternative to --input, provide a directory path to where the input files are located.")                                     
@@ -318,4 +318,4 @@ def parseArguments():
 
 if __name__ == '__main__':
     main()
-    
+

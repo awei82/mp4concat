@@ -108,7 +108,7 @@ def get_alignment_start_times(mp4_file, mp4Box_exe = 'bin/MP4Box'):
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-i","--input", type=str, nargs='+',
+    parser.add_argument("-i", "--input", type=str, nargs='+',
                         help="List of srt files to concatenate.")
     parser.add_argument("-d", "--input_dir", type=str,
                         help="As an alternative to --input, provide a directory path to where the input files are located.")   
